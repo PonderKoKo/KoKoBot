@@ -19,6 +19,7 @@ module.exports = {
   execute (message, args) {
     if (!started) {
       message.channel.send('The tournament hasn\'t started yet')
+      return
     }
     if (!Object.keys(teams).includes(message.author.id)) {
       message.channel.send('You did not submit a team for this tournament.')

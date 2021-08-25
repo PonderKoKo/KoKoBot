@@ -20,6 +20,7 @@ module.exports = {
   execute (message, args) {
     if (!started) {
       message.channel.send('The tournament hasn\'t started yet')
+      return
     }
     const checkedAlready = []
     if (args[0] === 'all') {

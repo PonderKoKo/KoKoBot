@@ -20,6 +20,7 @@ module.exports = {
   execute (message, args) {
     if (!started) {
       message.channel.send('The tournament hasn\'t started yet')
+      return
     }
     let id = message.author.id
     if (Object.keys(teams).includes(args[0])) {
