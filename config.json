@@ -5,6 +5,7 @@
 	"recordsFileName": "data/records.json",
 	"pathToCubeFiles": "./data/packs/cubes",
 	"imagesPath": "./data/images/",
+	"started": false,
 	"prefix": "//",
 	"timeBetweenRefresh": 15,
 	"scryfallRequestDelayTime": 10000,
