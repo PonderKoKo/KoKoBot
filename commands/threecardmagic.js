@@ -1,6 +1,5 @@
 const { started } = require('../config.json')
 const fetch = require('node-fetch')
-const decks = require('../index.js').decks
 
 const previousSubmissions = ['Chancellor of the Dross', 'Force of Despair', 'Strip Mine', 'Gitaxian Probe', 'Black Lotus', 'Laboratory Maniac', 'Urza\'s Saga', 'Karakas', 'Urza\'s Saga', 'Chancellor of the Annex', 'Invisible Stalker', 'Black Lotus', 'Gideon of the Trials', 'City of Traitors', 'Black Lotus', 'Calciform Pools', 'Mishra\'s Factory', 'Chancellor of the Annex', 'Leyline of Anticipation', 'Black Lotus', 'Mesmeric Fiend', 'Strip Mine', 'Chancellor of the Forge', 'Chancellor of the Annex', 'Cavern of Souls', 'Scythe Tiger', 'Chancellor of the Annex', 'Greater Gargadon', 'Chalice of the Void', 'Rustvale Bridge', 'Dryad Arbor', 'Dryad Arbor', 'Crashing Footfalls', 'Chancellor of the Dross', 'Force of Despair', 'Subterranean Hangar', 'Cavern of Souls', 'Swarm Shambler', 'Swarm Shambler', 'Solitude', 'Chancellor of the Annex', 'Sheltered Valley', 'Chancellor of the Annex', 'Strip Mine', 'Fountain of Cho', 'Laboratory Maniac', 'Gitaxian Probe', 'Black Lotus', 'Grief', 'Dryad Arbor', 'Force of Despair', 'Providence', 'Solitude', 'Leyline of Lifeforce', 'Cavern of Souls', 'Chancellor of the Annex', 'Scythe Tiger', 'Pyrokinesis', 'Chancellor of the Forge', 'Strip Mine']
 
@@ -10,6 +9,7 @@ module.exports = {
   description: 'Submit a team for the three card magic competition or check your submitted team.',
   examples: ['threecardmagic Black Lotus|Channel|Emrakul, the Aeons Torn', 'threecardmagic'],
   execute (message, args) {
+    const decks = require('../index.js').decks
     if (args.length === 0) {
       if (Object.keys(decks).includes(message.author.id)) {
         message.reply(`Your current team is:\n${decks[message.author.id].join('\n')}`)
