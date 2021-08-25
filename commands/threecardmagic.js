@@ -11,7 +11,7 @@ module.exports = {
   examples: ['threecardmagic Black Lotus|Channel|Emrakul, the Aeons Torn', 'threecardmagic'],
   execute (message, args) {
     if (args.length === 0) {
-      if (message.author.id in decks) {
+      if (Object.keys(decks).includes(message.author.id)) {
         message.reply(`Your current team is:\n${decks[message.author.id].join('\n')}`)
       } else {
         message.reply('No team has been saved for this Discord account.')
