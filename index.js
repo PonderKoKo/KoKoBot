@@ -115,7 +115,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('guildMemberRemove', (member) => {
-  if (member.guild.id != '626215981387350057' || member.user.bot) return;
+  if (member.guild.id !== '626215981387350057' || member.user.bot) return;
   client.channels.fetch('626215981387350059')
     .then((channel) => { channel.send(`${member.displayName} left :(. We are now ${String(200 - (member.guild.memberCount % 200))} members away from ${String(200 * (Math.floor(member.guild.memberCount / 200) + 1))}.`); })
     .catch(() => { logging(`Couldn't retrieve welcome channel, no message was sent`, 'error'); });
@@ -170,8 +170,6 @@ client.on('message', (message) => {
     case 'restart':
       if (message.author.id === '448472133585207306') process.exit(0);
       break;
-    default:
-      message.channel.send(`This command does not exist. Use ${prefix}help for a list of commands`);
   }
 });
 
