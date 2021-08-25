@@ -1,0 +1,12 @@
+{
+	"token": "NzIwNjc4NzczMzE3NDM1NTUz.XuJyPg.HbqMAV8BaQX9V37gVjH1wrsy4oU",
+	"dataFileName": "data/data.json",
+	"threeCardFileName": "data/threecard.json",
+	"recordsFileName": "data/records.json",
+	"pathToCubeFiles": "./data/packs/cubes",
+	"imagesPath": "./data/images/",
+	"prefix": "//",
+	"timeBetweenRefresh": 15,
+	"scryfallRequestDelayTime": 10000,
+	"isTest": false
+}

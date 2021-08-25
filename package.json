@@ -1,0 +1,34 @@
+{
+  "name": "autospoilers",
+  "version": "1.0.0",
+  "description": "Checks Scryfall for specific sets in a certain interval and sends new cards to subscribed Discord channels, also has functionality to generate Cube packs.",
+  "main": "index.js",
+  "dependencies": {
+    "canvas": "^2.8.0",
+    "discord.io": "^2.5.3",
+    "discord.js": "^12.5.3",
+    "git": "^0.1.5",
+    "mz": "^2.7.0",
+    "nan": "^2.14.2",
+    "node-fetch": "^2.6.1",
+    "request": "^2.88.2",
+    "simple-get": "^4.0.0",
+    "winston": "^3.3.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "spoilers",
+    "automatic",
+    "Discord",
+    "MTG"
+  ],
+  "author": "KoKonuts",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2"
+  }
+}
