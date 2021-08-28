@@ -40,10 +40,10 @@ module.exports = {
             found.push(result.data[0].name)
           }
           if (found.length + notfound.length === 3) {
+            for (const thingy of found) {
+              console.log(thingy, previousSubmissions.includes(thingy))
+            }
             if (notfound.length !== 0) {
-              for (const thingy of found) {
-                console.log(thingy, previousSubmissions.includes(thingy))
-              }
               message.reply(`The team you submitted could not be saved. The following cards could not be found:\n${notfound.join('\n')}\nMake sure to check your spelling and note that only Vintage-legal cards are accepted.`)
             } else if (found.every((x) => previousSubmissions.includes(x))) {
               message.reply('All cards you submitted were submitted in the last tournament. Your team is thus not legal.')
