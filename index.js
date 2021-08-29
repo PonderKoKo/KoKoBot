@@ -28,6 +28,7 @@ let logchannel
 client.channels.fetch('881536704333377586')
   .then((channel) => {
     logchannel = channel
+    logchannel.send('Fetched logchannel')
   })
 
 function logging (logMessage, importance = 'default') {
@@ -44,7 +45,7 @@ function logging (logMessage, importance = 'default') {
   }
   const output = `${DATE} ${TIME} -- ${logMessage}`
   console.log(COLOR[importance], output, COLOR.reset)
-  if (logchannel !== undefined) {
+  if (logchannel) {
     logchannel.send(`${output} (${importance})`)
   }
 }
@@ -68,7 +69,7 @@ function writeFile (filename, data) {
       logging(`Successfully written to file: ${filename}`, 'automatic')
     }
   })
-  if (logchannel !== undefined) {
+  if (logchannel) {
     logchannel.send(new Discord.MessageAttachment(`./${filename}`, filename))
   }
 }
