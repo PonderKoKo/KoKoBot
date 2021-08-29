@@ -1,7 +1,4 @@
 const { started } = require('../config.json')
-const teams = require('../index.js').decks
-const records = require('../index.js').records
-const client = require('../index.js').client
 
 const fit = {
   0: 6,
@@ -22,37 +19,36 @@ module.exports = {
       message.channel.send('The tournament hasn\'t started yet')
       return
     }
+    const teams = require('../index.js').decks
+    const records = require('../index.js').records
+    const playerNames = require('../index.js').playerNames
     const checkedAlready = []
-    if (args[0] === 'all') {
-      for (const [player, opponents] of Object.entries(records)) {
-        checkedAlready.push(player)
-        for (const [opponent, submitted] of Object.entries(opponents)) {
-          if (checkedAlready.includes(opponent)) continue
-          if (submitted !== null && records[opponent][player] !== null && fit[submitted] !== records[opponent][player]) {
-            client.users.fetch(player)
-              .then((playeruser) => {
-                client.users.fetch(opponent)
-                  .then((opponentuser) => {
-                    message.channel.send(`${playeruser.username} — ${resultFromSubmitted(submitted)} — ${teams[player].join(' | ')}\n${opponentuser.username} — ${resultFromSubmitted(records[opponent][player])} — ${teams[opponent].join(' | ')}`)
-                  })
-              })
-          }
-        }
+    const checkAll = args.length > 0 && args[0] === 'all'
+    let noDisputes = true
+    for (const [player, opponents] of Object.entries(records)) {
+      if (!checkAll && player !== message.author.id) {
+        continue
       }
-    } else if (Object.keys(teams).includes(message.author.id)) {
-      const [player, opponents] = [message.author.id, records[message.author.id]]
+      checkedAlready.push(player)
       for (const [opponent, submitted] of Object.entries(opponents)) {
-        if (checkedAlready.includes(opponent)) continue
-        if (submitted !== null && records[opponent][player] !== null && fit[submitted] !== records[opponent][player]) {
-          client.users.fetch(player)
-            .then((playeruser) => {
-              client.users.fetch(opponent)
-                .then((opponentuser) => {
-                  message.channel.send(`${playeruser.username} — ${resultFromSubmitted(submitted)} — ${teams[player].join(' | ')}\n${opponentuser.username} — ${resultFromSubmitted(records[opponent][player])} — ${teams[opponent].join(' | ')}`)
-                })
-            })
+        if (checkedAlready.includes(opponent)) {
+          continue
+        }
+        const submits = {}
+        submits[player] = submitted
+        submits[opponent] = records[opponent][player]
+        if (submitted !== null && records[opponent][player] !== null && fit[submits[player]] !== submits[opponent]) {
+          noDisputes = false
+          const lines = []
+          for (const party of [player, opponent]) {
+            lines.push(`${playerNames[party]} — ${teams[party].join(' | ')} — ${resultFromSubmitted(submits[party])}`)
+          }
+          message.channel.send(lines.join('vs.\n'))
         }
       }
+    }
+    if (noDisputes) {
+      message.channel.send('There are no disputes.')
     }
   }
 }

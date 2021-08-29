@@ -83,6 +83,20 @@ client.once('ready', () => {
   })
   readFile(threeCardFileName, (content) => {
     module.exports.decks = JSON.parse(content)
+    const [playerNames, playerIDs] = [{}, {}]
+    module.exports.playerNames = playerNames
+    module.exports.playerIDs = playerIDs
+    client.guilds.fetch('626215981387350057')
+      .then((gannonServer) => {
+        for (const participantID of Object.keys(module.exports.decks)) {
+          gannonServer.members.fetch(participantID)
+            .then((participantMember) => {
+              const participantName = participantMember.displayName
+              playerNames[participantID] = participantName
+              playerIDs[participantName] = participantID
+            })
+        }
+      })
     readFile(recordsFileName, (content2) => {
       const tmp = JSON.parse(content2)
       if (started && Object.keys(tmp).length === 0) {
@@ -133,7 +147,7 @@ client.on('guildMemberRemove', (member) => {
 
 client.on('message', (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot || (isTest === true && message.author.id !== '448472133585207306')) return
-  const args = message.content.slice(prefix.length).replace(/[^0-9a-z ]/gi, '').toLowerCase().split(/ +/)
+  const args = message.content.slice(prefix.length).split(/ +/)
   const COMMAND = args.shift()
   logging(`The command ${COMMAND} was used with the arguments: ${args.join(' ')}`, 'response')
   if (Object.keys(commands).includes(COMMAND) && (message.author.id === '448472133585207306' || (commands[COMMAND].permission !== 'KoKonuts' && (message.guild === null || commands[COMMAND].permission === 'none' || message.member.hasPermission(commands[COMMAND].permission))))) {

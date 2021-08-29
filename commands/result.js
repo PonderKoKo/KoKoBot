@@ -1,18 +1,18 @@
 const { started } = require('../config.json')
-const teams = require('../index.js').decks
-const records = require('../index.js').records
-const client = require('../index.js').client
 
 module.exports = {
   name: 'result',
   permission: 'none',
   description: 'Give results',
   examples: ['result'],
-  execute (message, args) {
+  execute (message) {
     if (!started) {
       message.channel.send('The tournament hasn\'t started yet')
       return
     }
+    const teams = require('../index.js').decks
+    const records = require('../index.js').records
+    const playerNames = require('../index.js').playerNames
     const tournamentData = []
     for (const [id, team] of Object.entries(teams)) {
       let [missing, points] = [0, 0]
@@ -23,20 +23,14 @@ module.exports = {
           points += submitted
         }
       }
-      client.users.fetch(id)
-        .then(user => {
-          const name = user.username
-          const playerObject = { missing, points, team, name }
-          tournamentData.push(playerObject)
-          if (tournamentData.length === Object.keys(teams).length) {
-            tournamentData.sort((x, y) => y.points - x.points)
-            let response = ''
-            for (const playerData of tournamentData) {
-              response += `${playerData.name} — ${playerData.team.join(' | ')} — **${playerData.points}** (${playerData.missing} missing)\n`
-            }
-            message.channel.send(response)
-          }
-        })
+      const name = playerNames[id]
+      tournamentData.push({ missing, points, team, name })
     }
+    tournamentData.sort((x, y) => y.points - x.points)
+    let response = ''
+    for (const playerData of tournamentData) {
+      response += `${playerData.name} — ${playerData.team.join(' | ')} — **${playerData.points}** (${playerData.missing} missing)\n`
+    }
+    message.channel.send(response)
   }
 }

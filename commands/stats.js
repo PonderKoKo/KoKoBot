@@ -14,7 +14,7 @@ const fit = {
 
 module.exports = {
   name: 'stats',
-  permission: 'none',
+  permission: 'KoKonuts',
   description: 'Check your stats for the tournament',
   examples: ['stats'],
   execute (message, args) {
