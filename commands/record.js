@@ -35,7 +35,7 @@ module.exports = {
       message.channel.send(response)
       return
     }
-    const opponent = args.slice(0, args.length - 1)
+    const opponent = args.slice(0, args.length - 1).join(' ')
     const score = Number(args[args.length - 1])
     if (!Object.keys(records[message.author.id]).map(x => playerNames[x]).includes(opponent)) {
       message.channel.send('The opponent you gave does not exist in the tournament. This process does not work over IDs anymore.')
