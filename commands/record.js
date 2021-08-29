@@ -35,17 +35,13 @@ module.exports = {
       message.channel.send(response)
       return
     }
-    if (args.length !== 2) {
-      message.channel.send('This command requires exactly two arguments, the opponentID and your submitted score')
-      return
-    }
-    const opponent = args[0]
-    const score = Number(args[1])
+    const opponent = args.slice(0, args.length - 1)
+    const score = Number(args[args.length - 1])
     if (!Object.keys(records[message.author.id]).map(x => playerNames[x]).includes(opponent)) {
       message.channel.send('The opponent you gave does not exist in the tournament. This process does not work over IDs anymore.')
       return
     }
-    if (!Object.keys(fit).includes(args[1])) {
+    if (!Object.keys(fit).includes(args[args.length - 1])) {
       message.channel.send('The result you submitted is not possible. Make sure to submit 6 for 6-0, 4 for 4-1, 3 for 3-3, 2 for 2-2, 1 for 1-4 or 0 for 0-6')
       return
     }
