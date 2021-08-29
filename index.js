@@ -25,11 +25,6 @@ let spoilerData = {}
 const commands = {}
 
 let logchannel
-client.channels.fetch('881536704333377586')
-  .then((channel) => {
-    logchannel = channel
-    logchannel.send('Fetched logchannel')
-  })
 
 function logging (logMessage, importance = 'default') {
   const TODAY = new Date()
@@ -75,7 +70,11 @@ function writeFile (filename, data) {
 }
 
 client.once('ready', () => {
-  logging('Initializing...')
+  client.channels.fetch('881536704333377586')
+    .then((channel) => {
+      logchannel = channel
+      logging('Client is ready')
+    })
   readFile(dataFileName, (content) => {
     spoilerData = JSON.parse(content)
     module.exports.spoilerData = spoilerData
