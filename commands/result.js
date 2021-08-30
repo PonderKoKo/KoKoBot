@@ -1,3 +1,4 @@
+const table = require('text-table')
 const { started } = require('../config.json')
 
 module.exports = {
@@ -24,13 +25,10 @@ module.exports = {
         }
       }
       const name = playerNames[id]
-      tournamentData.push({ missing, points, team, name })
+      tournamentData.push({ name, team, points, missing })
     }
     tournamentData.sort((x, y) => y.points - x.points)
-    let response = ''
-    for (const playerData of tournamentData) {
-      response += `${playerData.name} — ${playerData.team.join(' | ')} — **${playerData.points}** (${playerData.missing} missing)\n`
-    }
+    const response = table(tournamentData.map(x => [x.name, ...x.team, `**${x.points}**`, `(${x.missing}M)`]))
     message.channel.send(response)
   }
 }

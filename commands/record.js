@@ -1,4 +1,5 @@
 const { started } = require('../config.json')
+const table = require('text-table')
 
 const fit = {
   0: 6,
@@ -28,10 +29,9 @@ module.exports = {
       return
     }
     if (args.length === 0) {
-      let response = ''
-      for (const [opponentID, submitted] of Object.entries(records[message.author.id])) {
-        response += `${playerNames[opponentID]} — ${teams[opponentID].join(' | ')} — Y: ${resultFromSubmitted(submitted)} — O: ${resultFromSubmitted(records[opponentID][message.author.id])}\n`
-      }
+      const response = table(Object.entries(records[message.author.id]).map((opponentID, submitted) => {
+        return [playerNames[opponentID], teams[opponentID].join(' | '), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
+      }))
       message.channel.send(response)
       return
     }
