@@ -28,7 +28,7 @@ module.exports = {
       tournamentData.push({ name, team, points, missing })
     }
     tournamentData.sort((x, y) => y.points - x.points)
-    const response = table(tournamentData.map(x => [x.name, ...x.team, `**${x.points}**`, `(${x.missing}M)`]))
+    const response = table(tournamentData.map(x => [x.name, ...x.team, `**${x.points}**`, `(${x.missing}M)`]), { align: ['l', 'l', 'l', 'l', 'l', 'l', 'l'] })
     message.channel.send(response)
   }
 }
