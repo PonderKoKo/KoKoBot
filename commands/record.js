@@ -29,7 +29,8 @@ module.exports = {
       return
     }
     if (args.length === 0) {
-      const response = table(Object.entries(records[message.author.id]).map((opponentID, submitted) => {
+      const response = table(Object.entries(records[message.author.id]).map(x => {
+        const [opponentID, submitted] = x
         return [playerNames[opponentID], teams[opponentID].join(' | '), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
       }))
       message.channel.send(response)
