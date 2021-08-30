@@ -33,7 +33,7 @@ module.exports = {
         const [opponentID, submitted] = x
         return [playerNames[opponentID], teams[opponentID].join(' | '), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
       }))
-      message.channel.send(response)
+      message.channel.send('```' + response + '```')
       return
     }
     const opponent = args.slice(0, args.length - 1).join(' ')
