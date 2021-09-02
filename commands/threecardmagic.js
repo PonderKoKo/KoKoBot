@@ -1,6 +1,10 @@
 const { started } = require('../config.json')
 const fetch = require('node-fetch')
 
+const zonesizes = {
+  library: 1,
+  hand: 3
+}
 const banlist = ['Thassa\'s Oracle', 'Jace, Wielder of Mysteries', 'Laboratory Maniac']
 const basics = ['Plains', 'Island', 'Swamp', 'Mountain', 'Forest', 'Wastes', 'Snow-Covered Plains', 'Snow-Covered Island', 'Snow-Covered Swamp', 'Snow-Covered Mountain', 'Snow-Covered Forest']
 
@@ -24,8 +28,9 @@ module.exports = {
       return
     }
     const cardnames = message.content.split(' ').slice(1).join(' ').split('|')
-    if (cardnames.length !== 4) {
-      message.reply(`You sent ${cardnames.length} cards. Card names must be separated by only a "|" and nothing else. Three-card Magic requires exactly **four** cards ;).`)
+    const requiredNumber = Object.keys(zonesizes).reduce((accu, value) => accu + zonesizes[value])
+    if (cardnames.length !== requiredNumber) {
+      message.reply(`You sent ${cardnames.length} cards. Card names must be separated by only a "|" and nothing else. Three-card Magic requires exactly **${requiredNumber}** cards ;).`)
       return
     }
     const notfound = []
@@ -50,9 +55,11 @@ module.exports = {
             } else if (!cardnames.some(x => basics.includes(x))) {
               message.channel.send('Your deck must include at least one basic land')
             } else {
-              const [library, ...hand] = cardnames
-              hand.sort((a, b) => a.length - b.length)
-              const deck = { library, hand }
+              const deck = {}
+              for (const [zone, size] of Object.entries(zonesizes)) {
+                deck[zone] = cardnames.splice(0, size)
+                deck[zone].sort((a, b) => a.length - b.length)
+              }
               decks[message.author.id] = deck
               message.reply(`Your new team has been submitted. It contains:\n${deckToString(deck)}`)
             }
