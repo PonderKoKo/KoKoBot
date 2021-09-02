@@ -43,7 +43,7 @@ module.exports = {
           for (const party of [player, opponent]) {
             lines.push(`${playerNames[party]} — ${teams[party].join(' | ')} — ${resultFromSubmitted(submits[party])}`)
           }
-          message.channel.send(lines.join('vs.\n'))
+          message.channel.send(lines.join(' vs.\n'))
         }
       }
     }
