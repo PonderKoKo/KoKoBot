@@ -28,7 +28,7 @@ module.exports = {
       return
     }
     const cardnames = message.content.split(' ').slice(1).join(' ').split('|')
-    const requiredNumber = Object.keys(zonesizes).reduce((accu, value) => accu + zonesizes[value])
+    const requiredNumber = Object.keys(zonesizes).reduce((accu, value) => accu + zonesizes[value], 0)
     if (cardnames.length !== requiredNumber) {
       message.reply(`You sent ${cardnames.length} cards. Card names must be separated by only a "|" and nothing else. Three-card Magic requires exactly **${requiredNumber}** cards ;).`)
       return
