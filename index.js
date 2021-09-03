@@ -132,7 +132,11 @@ client.on('guildMemberAdd', (member) => {
   logging('Guild member was added')
   client.channels.fetch('626215981387350059')
     .then((channel) => {
-      channel.send(`Welcome to the server, <@${member.user.id}>. We have both Custom Card Creation and 3-Card-Magic contests running in this server! Check out <#645407379151781899> if you're interested.`)
+      channel.send([
+        `Welcome to the server, <@${member.user.id}>.`,
+        `We have both Custom Card Creation and 3-Card-Magic contests running in this server! Check out <#645407379151781899> if you're interested.`,
+        'You can also head to <#799723157371486208> to ... you know ... react for roles. There are some common sense <#626217085743136778> as well.'
+      ].join('\n'))
       commands.pack.welcome(channel)
     })
     .catch(() => { logging(`Couldn't retrieve welcome channel, no message was sent`, 'error') })

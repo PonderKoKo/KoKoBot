@@ -1,21 +1,18 @@
 module.exports = {
-	name: 'setinfo',
-	permission: 'none',
-	description: 'Sends information on the available sets, whether they are watched or not and whether or not autowatch is enabled',
-	examples: ['setinfo'],
-	execute(userMessage, args) {
-		const data = require('../index.js').spoilerData;
-		let message = '';
-		for (const setkey of Object.keys(data.sets)) {
-			message += `\n${data.sets[setkey].name} - code: ${data.sets[setkey].CODE} - ${data.sets[setkey].channelIDs.includes(userMessage.channel.id) ? 'watched' : 'not watched'}`;
-		}
-		if (message == '') {
-			message = 'There are currently no available sets.';
-		}
-		else {
-			message = `The following sets are currently available:${message}`;
-		}
-		message = `${message}\nAutowatch is ${data.autowatch.includes(userMessage.channel.id) ? 'enabled' : 'disabled'}`;
-		userMessage.channel.send(message);
-	},
-};
+  name: 'setinfo',
+  permission: 'none',
+  description: 'Sends information on the available sets, whether they are watched or not and whether or not autowatch is enabled',
+  examples: ['setinfo'],
+  execute (message) {
+    const data = require('../index.js').spoilerData
+    const response = [
+      'The following sets are currently available:',
+      ...Object.entries(data.sets).map(x => {
+        const [, value] = x
+        return [value.name, value.CODE, value.channelIDs.includes(message.channel.id) ? 'watched' : 'not watched'].join(' — ')
+      }),
+      `Autowatch is ${data.autowatch.includes(message.channel.id) ? 'en' : 'dis'}abled`
+    ].join('\n')
+    message.channel.send(response)
+  }
+}
