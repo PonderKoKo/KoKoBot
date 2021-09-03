@@ -134,8 +134,9 @@ client.on('guildMemberAdd', (member) => {
     .then((channel) => {
       channel.send([
         `Welcome to the server, <@${member.user.id}>.`,
-        `We have both Custom Card Creation and 3-Card-Magic contests running in this server! Check out <#645407379151781899> if you're interested.`,
-        'You can also head to <#799723157371486208> to ... you know ... react for roles. There are some common sense <#626217085743136778> as well.'
+        'We have both Custom Card Creation and 3-Card-Magic contests, as well as Cube Drafts with Caleb running in this server.',
+        `All of these are announced in <#645407379151781899>.`,
+        'You can head to <#799723157371486208> to ... you know ... react for roles. There are some common sense <#626217085743136778> as well.'
       ].join('\n'))
       commands.pack.welcome(channel)
     })
