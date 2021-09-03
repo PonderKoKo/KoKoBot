@@ -31,7 +31,7 @@ module.exports = {
     if (args.length === 0) {
       const response = table(Object.entries(records[message.author.id]).map(x => {
         const [opponentID, submitted] = x
-        return [playerNames[opponentID], ...teams[opponentID], `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
+        return [playerNames[opponentID], ...deckArray(teams[opponentID]), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
       }))
       message.channel.send('```' + response + '```')
       return
@@ -53,4 +53,12 @@ module.exports = {
 
 function resultFromSubmitted (submitted) {
   return submitted === null ? 'nothing' : `${submitted}-${fit[submitted]}`
+}
+
+function deckArray (deck) {
+  const list = []
+  for (const zone in deck) {
+    list.concat(deck[zone])
+  }
+  return list
 }

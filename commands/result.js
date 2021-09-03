@@ -17,7 +17,8 @@ module.exports = {
     const tournamentData = []
     for (const [id, team] of Object.entries(teams)) {
       let [missing, points] = [0, 0]
-      for (const [opponent, submitted] of Object.entries(records[id])) {
+      for (const opponent in records[id]) {
+        const submitted = records[id][opponent]
         if (submitted === null) {
           missing++
         } else {
@@ -28,7 +29,15 @@ module.exports = {
       tournamentData.push({ name, team, points, missing })
     }
     tournamentData.sort((x, y) => y.points - x.points)
-    const response = table(tournamentData.map(x => [x.name, ...x.team, x.points, `(${x.missing}M)`]))
+    const response = table(tournamentData.map(x => [x.name, ...deckArray(x.team), x.points, `(${x.missing}M)`]))
     message.channel.send('```' + response + '```')
   }
+}
+
+function deckArray (deck) {
+  const list = []
+  for (const zone in deck) {
+    list.concat(deck[zone])
+  }
+  return list
 }
