@@ -36,7 +36,7 @@ module.exports = {
           if (hits.length === 0) {
             message.channel.send(`I couldn't find any flavor text for these cards :(`)
           } else {
-            message.channel.send(hits.map(hit => `*${hit.flavor}* (${hit.name}, ${hit.set})`).join('\n') + more ? '\nThere were other matches as well.' : '')
+            message.channel.send(hits.map(hit => `*${hit.flavor}* (${hit.name}, ${hit.set})`).join('\n') + (more ? '\nThere were other matches as well.' : ''))
           }
         }
       })

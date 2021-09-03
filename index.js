@@ -358,8 +358,8 @@ function scryfallRequest (setcode) {
             }
             if (!isTest) {
               for (const channelID of spoilerData.sets[SETKEY].channelIDs) {
-                const channel = client.channels.cache.get(channelID)
-                channel.send(message)
+                client.channels.fetch(channelID)
+                  .then(channel => channel.send(message))
               }
             }
             spoilerData.sets[SETKEY].cardIDs[card.id] = message.split('\n')

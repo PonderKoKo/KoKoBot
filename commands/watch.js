@@ -24,7 +24,7 @@ module.exports = {
       data.sets[datacode].channelIDs.push(message.channel.id)
     } else {
       message.channel.send(`The set ${setcode} will no longer be watched in this channel.`)
-      data.sets[datacode].channelIDs.filter(e => e !== message.channel.id)
+      data.sets[datacode].channelIDs = data.sets[datacode].channelIDs.filter(e => e !== message.channel.id)
     }
   }
 }
