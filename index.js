@@ -83,9 +83,6 @@ client.once('ready', () => {
   })
   readFile(threeCardFileName, (content) => {
     module.exports.decks = JSON.parse(content)
-    for (const key in module.exports.decks) {
-      module.exports.decks[key].sort((a, b) => a.length - b.length)
-    }
     const [playerNames, playerIDs] = [{}, {}]
     module.exports.playerNames = playerNames
     module.exports.playerIDs = playerIDs
