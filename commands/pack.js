@@ -4,7 +4,7 @@ const fetch = require('node-fetch')
 const chance = require('chance').Chance()
 
 // const CUBEDATA = require('../data.js').CUBEDATA
-const scryfallCubes = ['arena', 'grixis', 'legacy', 'chuck', 'twisted', 'protour', 'uncommon', 'april', 'modern', 'amaz', 'tinkerer', 'livethedream', 'chromatic', 'vintage']
+const scryfallCubes = ['Arena', 'Grixis', 'Legacy', 'Chuck', 'Twisted', 'Protour', 'Uncommon', 'April', 'Modern', 'Amaz', 'Tinkerer', 'Livethedream', 'Chromatic', 'Vintage']
 
 module.exports = {
   name: 'pack',
@@ -27,7 +27,7 @@ module.exports = {
 
 async function generateCubePack (cubeName, channel, numberOfCards = 15) {
   const columns = 5
-  const message = `Here is a ${cubeName} pack, let us know what your first pick would be!`
+  const message = `Here is a ${cubeName} Cube pack, let us know what your first pick would be!`
   const spacing = 10
   const cardWidth = 149 * 2
   const cardHeight = 208 * 2
@@ -49,6 +49,9 @@ async function generateCubePack (cubeName, channel, numberOfCards = 15) {
             .then((page) => {
               for (const choice of indices) {
                 if (175 * i > choice) {
+                  if (page.data[choice] === undefined) {
+                    console.log(i, choice, cubeName, result.total_cards)
+                  }
                   Canvas.loadImage(page.data[choice].image_uris.png)
                     .then(image => {
                       ctx.drawImage(image, spacing + (drawn % columns) * (cardWidth + spacing), spacing + Math.floor(drawn / columns) * (cardHeight + spacing), cardWidth, cardHeight)
