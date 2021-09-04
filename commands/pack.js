@@ -14,7 +14,7 @@ module.exports = {
   execute (message, args) {
     if (args.length === 0) {
       message.channel.send(`You need to specify which cube you want a pack of. The available cubes are: ${scryfallCubes.join(', ')}. Let me know if you would like your cube to be added!`)
-    } else if (scryfallCubes.includes(args[0].toLowerCase())) {
+    } else if (scryfallCubes.map(x => x.toLowerCase()).includes(args[0].toLowerCase())) {
       generateCubePack(args[0], message.channel)
     } else {
       message.channel.send(`This was interpreted as a cubecobra ID, here's your pack: https://cubecobra.com/cube/samplepackimage/${args[0]}/${String(Math.floor(Math.random() * 10000000))}`)
