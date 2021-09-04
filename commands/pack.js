@@ -13,7 +13,7 @@ module.exports = {
   examples: ['pack vintage cube', 'pack legacy cube 12'],
   execute (message, args) {
     if (args.length === 0) {
-      message.channel.send(`You need to specify which cube you want a pack of. The available cubes are: ${Object.keys(scryfallCubes).join(', ')}. Let me know if you would like your cube to be added!`)
+      message.channel.send(`You need to specify which cube you want a pack of. The available cubes are: ${scryfallCubes.join(', ')}. Let me know if you would like your cube to be added!`)
     } else if (scryfallCubes.includes(args[0].toLowerCase())) {
       generateCubePack(args[0], message.channel)
     } else {
@@ -43,7 +43,7 @@ async function generateCubePack (cubeName, channel, numberOfCards = 15) {
       } else {
         const indices = chance.unique(chance.natural, numberOfCards, { min: 0, max: result.total_cards - 1 })
         let drawn = 0
-        for (let i = 1; Math.ceil(i < result.total_cards / 175) + 1; i++) {
+        for (let i = 1; i < Math.ceil(i < result.total_cards / 175) + 1; i++) {
           fetch(`https://api.scryfall.com/cards/search?format=json&include_extras=true&include_multilingual=false&order=name&page=${i}&q=cube=${cubeName}&unique=cards`)
             .then((response) => response.json())
             .then((page) => {
