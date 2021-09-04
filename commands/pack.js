@@ -49,10 +49,7 @@ async function generateCubePack (cubeName, channel, numberOfCards = 15) {
             .then((page) => {
               for (const choice of indices) {
                 if (175 * i > choice) {
-                  if (page.data[choice] === undefined) {
-                    console.log(i, choice, cubeName, result.total_cards)
-                  }
-                  Canvas.loadImage(page.data[choice].image_uris.png)
+                  Canvas.loadImage(page.data[choice % 175].image_uris.png)
                     .then(image => {
                       ctx.drawImage(image, spacing + (drawn % columns) * (cardWidth + spacing), spacing + Math.floor(drawn / columns) * (cardHeight + spacing), cardWidth, cardHeight)
                       drawn++
