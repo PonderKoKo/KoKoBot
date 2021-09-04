@@ -84,9 +84,9 @@ function deckToString (deck) {
 module.exports.deckToString = deckToString
 
 function deckToArray (deck) {
-  const cards = []
+  let cards = []
   for (const [zone, contents] of Object.entries(deck)) {
-    cards.concat(contents.map(x => brackets[zone][0] + x + brackets[zone][1]))
+    cards = cards.concat(contents.map(x => brackets[zone][0] + x + brackets[zone][1]))
   }
   return cards
 }

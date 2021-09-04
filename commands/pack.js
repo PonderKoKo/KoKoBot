@@ -42,6 +42,7 @@ async function generateCubePack (cubeName, channel, numberOfCards = 15) {
         channel.send('Scryfall responded to the request with an error')
       } else {
         const indices = chance.unique(chance.natural, numberOfCards, { min: 0, max: result.total_cards - 1 })
+        console.log(indices)
         let drawn = 0
         for (let i = 1; i < Math.ceil(i < result.total_cards / 175) + 1; i++) {
           fetch(`https://api.scryfall.com/cards/search?format=json&include_extras=true&include_multilingual=false&order=name&page=${i}&q=cube=${cubeName}&unique=cards`)
@@ -49,6 +50,7 @@ async function generateCubePack (cubeName, channel, numberOfCards = 15) {
             .then((page) => {
               for (const choice of indices) {
                 if (175 * i > choice) {
+                  console.log(page.data[choice].name)
                   Canvas.loadImage(page.data[choice].image_uris.png)
                     .then(image => {
                       ctx.drawImage(image, spacing + (drawn % columns) * (cardWidth + spacing), spacing + Math.floor(drawn / columns) * (cardHeight + spacing), cardWidth, cardHeight)
