@@ -21,7 +21,7 @@ module.exports = {
     }
   },
   welcome (channel) {
-    generateCubePack(Object.keys(scryfallCubes)[Object.keys(scryfallCubes).length * Math.random() | 0], channel)
+    generateCubePack(scryfallCubes[Object.keys(scryfallCubes).length * Math.random() | 0], channel)
   }
 }
 
@@ -45,6 +45,7 @@ async function generateCubePack (cubeName, channel, numberOfCards = 15) {
         console.log(indices)
         let drawn = 0
         for (let i = 1; i < Math.ceil(i < result.total_cards / 175) + 1; i++) {
+          console.log(i)
           fetch(`https://api.scryfall.com/cards/search?format=json&include_extras=true&include_multilingual=false&order=name&page=${i}&q=cube=${cubeName}&unique=cards`)
             .then((response) => response.json())
             .then((page) => {
