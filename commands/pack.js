@@ -1,8 +1,10 @@
 const Discord = require('discord.js')
 const Canvas = require('canvas')
 const fetch = require('node-fetch')
+const chance = require('chance').Chance()
 
-const CUBEDATA = require('../data.js').CUBEDATA
+// const CUBEDATA = require('../data.js').CUBEDATA
+const scryfallCubes = ['arena', 'grixis', 'legacy', 'chuck', 'twisted', 'protour', 'uncommon', 'april', 'modern', 'amaz', 'tinkerer', 'livethedream', 'chromatic', 'vintage']
 
 module.exports = {
   name: 'pack',
@@ -11,75 +13,54 @@ module.exports = {
   examples: ['pack vintage cube', 'pack legacy cube 12'],
   execute (message, args) {
     if (args.length === 0) {
-      message.channel.send(`You need to specify which cube you want a pack of. The available cubes are: ${Object.keys(CUBEDATA).join(', ')}. Let me know if you would like your cube to be added!`)
-      return
-    }
-    if (args.length > 1 && Number(args[args.length - 1]) > 0 && Number(args[args.length - 1]) < 15) {
-      generateCubePack(args.splice(0, args.length - 1).join(' '), message.channel, 'command', Number(args[args.length - 1]))
+      message.channel.send(`You need to specify which cube you want a pack of. The available cubes are: ${Object.keys(scryfallCubes).join(', ')}. Let me know if you would like your cube to be added!`)
+    } else if (scryfallCubes.includes(args[0].toLowerCase())) {
+      generateCubePack(args[0], message.channel)
     } else {
-      generateCubePack(args.join(' '), message.channel, 'command')
+      message.channel.send(`This was interpreted as a cubecobra ID, here's your pack: https://cubecobra.com/cube/samplepackimage/${args[0]}/${String(Math.floor(Math.random() * 10000000))}`)
     }
   },
   welcome (channel) {
-    generateCubePack(Object.keys(CUBEDATA)[Object.keys(CUBEDATA).length * Math.random() | 0], channel, 'welcome')
+    generateCubePack(Object.keys(scryfallCubes)[Object.keys(scryfallCubes).length * Math.random() | 0], channel)
   }
 }
 
-async function generateCubePack (cubeNameInput, channel, messageType, numberOfCards = 15) {
-  let cubeName
-  for (const cube of Object.keys(CUBEDATA)) {
-    if (cube.toLowerCase() === cubeNameInput.toLowerCase()) {
-      cubeName = cube
-      break
-    }
-  }
-  if (!cubeName) {
-    channel.send(`This was interpreted as a cubecobra ID, here's your pack: https://cubecobra.com/cube/samplepackimage/${cubeNameInput}/${String(Math.floor(Math.random() * 10000000))}`)
-    // channel.send(`The cube ${cubeNameInput} doesn't exist. The available cubes are: ${Object.keys(CUBEDATA).join(', ')}. Let me know if you would like your cube to be added!`);
-    return
-  }
+async function generateCubePack (cubeName, channel, numberOfCards = 15) {
   const columns = 5
-  let message
-  switch (messageType) {
-    case 'welcome':
-      message = `Here is a ${cubeName} pack, let us know what your first pick would be!`
-      break
-    default:
-      message = `Here is a pack of ${cubeName}.`
-      break
-  }
+  const message = `Here is a ${cubeName} pack, let us know what your first pick would be!`
   const spacing = 10
   const cardWidth = 149 * 2
   const cardHeight = 208 * 2
   const rows = Math.ceil(numberOfCards / columns)
   const canvas = Canvas.createCanvas(columns * (cardWidth + spacing) + spacing, rows * (cardHeight + spacing) + spacing)
   const ctx = canvas.getContext('2d')
-  const cardsInCube = [...CUBEDATA[cubeName]]
-  const selectedCards = []
-  for (let i = 0; i < numberOfCards; i++) {
-    const cardIndex = Math.floor(Math.random() * cardsInCube.length)
-    selectedCards.push(cardsInCube[cardIndex])
-    cardsInCube.splice(cardIndex, 1)
-  }
-  let i = 0
-  for (const card of selectedCards) {
-    const url = `https://api.scryfall.com/cards/search?format=json&include_multilingual=false&q=!"${card}"`
-    fetch(url)
-      .then(response => response.json())
-      .then(function (result) {
-        if (result.object !== 'list') {
-          channel.send(`I encountered a problem with finding ${card} on Scryfall.`)
-        } else {
-          const imageLink = result.data[0].image_uris.png
-          Canvas.loadImage(imageLink)
-            .then(image => {
-              ctx.drawImage(image, spacing + (i % columns) * (cardWidth + spacing), spacing + Math.floor(i / columns) * (cardHeight + spacing), cardWidth, cardHeight)
-              i++
-              if (i === numberOfCards) {
-                channel.send(message, new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png'))
+
+  fetch(`https://api.scryfall.com/cards/search?format=json&include_multilingual=false&q=cube=${cubeName}`)
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.object !== 'list') {
+        channel.send('Scryfall responded to the request with an error')
+      } else {
+        const indices = chance.unique(chance.natural, numberOfCards, { min: 0, max: result.total_cards - 1 })
+        let drawn = 0
+        for (let i = 1; Math.ceil(i < result.total_cards / 175) + 1; i++) {
+          fetch(`https://api.scryfall.com/cards/search?format=json&include_extras=true&include_multilingual=false&order=name&page=${i}&q=cube=${cubeName}&unique=cards`)
+            .then((response) => response.json())
+            .then((page) => {
+              for (const choice of indices) {
+                if (175 * i > choice) {
+                  Canvas.loadImage(page.data[choice].image_uris.png)
+                    .then(image => {
+                      ctx.drawImage(image, spacing + (drawn % columns) * (cardWidth + spacing), spacing + Math.floor(drawn / columns) * (cardHeight + spacing), cardWidth, cardHeight)
+                      drawn++
+                      if (drawn === numberOfCards) {
+                        channel.send(message, new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png'))
+                      }
+                    })
+                }
               }
             })
         }
-      })
-  }
+      }
+    })
 }

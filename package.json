@@ -1,10 +1,12 @@
 {
   "name": "autospoilers",
   "version": "1.0.0",
+  "private": true,
   "description": "Checks Scryfall for specific sets in a certain interval and sends new cards to subscribed Discord channels, also has functionality to generate Cube packs.",
   "main": "index.js",
   "dependencies": {
     "canvas": "^2.8.0",
+    "chance": "^1.1.8",
     "discord.io": "^2.5.3",
     "discord.js": "^12.5.3",
     "git": "^0.1.5",
@@ -16,8 +18,9 @@
     "text-table": "^0.2.0",
     "winston": "^3.3.3"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PonderKoKo/KoKoBot.git"
   },
   "keywords": [
     "spoilers",

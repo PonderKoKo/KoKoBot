@@ -1,4 +1,5 @@
 const { started } = require('../config.json')
+const { deckToString } = require('./threecardmagic.js')
 
 const fit = {
   0: 6,
@@ -34,16 +35,12 @@ module.exports = {
         if (checkedAlready.includes(opponent)) {
           continue
         }
-        const submits = {}
-        submits[player] = submitted
-        submits[opponent] = records[opponent][player]
-        if (submitted !== null && records[opponent][player] !== null && fit[submits[player]] !== submits[opponent]) {
+        if (submitted !== null && records[opponent][player] !== null && fit[submitted] !== records[opponent][player]) {
           noDisputes = false
-          const lines = []
-          for (const party of [player, opponent]) {
-            lines.push(`${playerNames[party]} — ${teams[party].join(' | ')} — ${resultFromSubmitted(submits[party])}`)
-          }
-          message.channel.send(lines.join(' vs.\n'))
+          message.channel.send([
+            generateSide(playerNames[player], teams[player], submitted),
+            generateSide(playerNames[opponent], teams[opponent], records[opponent][player])
+          ].join('\n'))
         }
       }
     }
@@ -55,4 +52,8 @@ module.exports = {
 
 function resultFromSubmitted (submitted) {
   return submitted === null ? 'nothing' : `${submitted}-${fit[submitted]}`
+}
+
+function generateSide (name, deck, submitted) {
+  return `${name} — ${deckToString(deck)} — ${resultFromSubmitted(submitted)}`
 }

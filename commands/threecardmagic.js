@@ -5,6 +5,11 @@ const zonesizes = {
   library: 1,
   hand: 3
 }
+const brackets = {
+  library: ['[', ']'],
+  hand: ['', '']
+}
+
 const banlist = ['Thassa\'s Oracle', 'Jace, Wielder of Mysteries', 'Laboratory Maniac']
 const basics = ['Plains', 'Island', 'Swamp', 'Mountain', 'Forest', 'Wastes', 'Snow-Covered Plains', 'Snow-Covered Island', 'Snow-Covered Swamp', 'Snow-Covered Mountain', 'Snow-Covered Forest']
 
@@ -70,9 +75,15 @@ module.exports = {
 }
 
 function deckToString (deck) {
-  let message = ''
-  for (const [zone, contents] of Object.entries(deck)) {
-    message += `${zone} — ${contents.join(' | ')}\n`
-  }
-  return message
+  return deckToArray(deck).join(' | ')
 }
+module.exports.deckToString = deckToString
+
+function deckToArray (deck) {
+  const cards = []
+  for (const [zone, contents] of Object.entries(deck)) {
+    cards.concat(contents.map(x => brackets[zone][0] + x + brackets[zone][1]))
+  }
+  return cards
+}
+module.exports.deckToArray = deckToArray

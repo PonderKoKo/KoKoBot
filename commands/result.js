@@ -1,5 +1,6 @@
 const table = require('text-table')
 const { started } = require('../config.json')
+const { deckToArray } = require('./threecardmagic.js')
 
 module.exports = {
   name: 'result',
@@ -29,15 +30,7 @@ module.exports = {
       tournamentData.push({ name, team, points, missing })
     }
     tournamentData.sort((x, y) => y.points - x.points)
-    const response = table(tournamentData.map(x => [x.name, ...deckArray(x.team), x.points, `(${x.missing}M)`]))
+    const response = table(tournamentData.map(x => [x.name, ...deckToArray(x.team), x.points, `(${x.missing}M)`]))
     message.channel.send('```' + response + '```')
   }
-}
-
-function deckArray (deck) {
-  const list = []
-  for (const zone in deck) {
-    list.concat(deck[zone])
-  }
-  return list
 }

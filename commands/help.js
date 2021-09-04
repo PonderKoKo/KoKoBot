@@ -1,5 +1,4 @@
 const fs = require('mz/fs')
-const { prefix } = require('../config.json')
 const commands = {}
 
 fs.readdir('./commands',
@@ -28,10 +27,12 @@ module.exports = {
       message.channel.send(Object.keys(commands).map(name => `${name} — ${commands[name].description}`).join('\n'))
     } else if (Object.keys(commands).includes(args[0])) {
       const command = commands[args[0]]
-      message.channel.send(`**${command.name}**
-required permission: ${command.permission}
-description: ${command.description}
-examples: ${prefix}${command.examples.join(`, ${prefix}`)}`)
+      message.channel.send([
+        `**${command.name}**`,
+        `required permission: ${command.permission}`,
+        `description: ${command.description}`,
+        `examples: ${command.examples.join(', ')}`
+      ].join('\n'))
     } else {
       message.channel.send(`The command ${args[0]} doesn't exist`)
     }

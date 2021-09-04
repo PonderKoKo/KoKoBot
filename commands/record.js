@@ -1,4 +1,5 @@
 const { started } = require('../config.json')
+const { deckToArray } = require('./threecardmagic.js')
 const table = require('text-table')
 
 const fit = {
@@ -28,10 +29,10 @@ module.exports = {
       message.channel.send('You did not submit a team for this tournament.')
       return
     }
-    if (args.length === 0) {
+    if (args.length === 0 || (Object.keys(teams).includes(args.slice(0, args.length - 1).join(' ')) && args[args.length - 1] === 'check')) {
       const response = table(Object.entries(records[message.author.id]).map(x => {
         const [opponentID, submitted] = x
-        return [playerNames[opponentID], ...deckArray(teams[opponentID]), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
+        return [playerNames[opponentID], ...deckToArray(teams[opponentID]), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
       }))
       message.channel.send('```' + response + '```')
       return
@@ -53,12 +54,4 @@ module.exports = {
 
 function resultFromSubmitted (submitted) {
   return submitted === null ? 'nothing' : `${submitted}-${fit[submitted]}`
-}
-
-function deckArray (deck) {
-  const list = []
-  for (const zone in deck) {
-    list.concat(deck[zone])
-  }
-  return list
 }
