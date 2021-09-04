@@ -22,10 +22,6 @@ module.exports = {
     const decks = require('../index.js').decks
     if (args.length === 0) {
       if (Object.keys(decks).includes(message.author.id)) {
-        const deck = decks[message.author.id]
-        console.log(deck)
-        console.log(deckToArray(deck))
-        console.log(deckToString(deck))
         message.reply(`Your current team is: ${deckToString(decks[message.author.id])}`)
       } else {
         message.reply('No team has been saved for this Discord account.')
