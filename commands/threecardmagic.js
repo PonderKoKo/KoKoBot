@@ -87,3 +87,20 @@ function deckToArray (deck) {
   return cards
 }
 module.exports.deckToArray = deckToArray
+
+function splitMessage (message) {
+  if (message.length < 2000) {
+    return [message]
+  }
+  const lines = message.split('\n')
+  const chunks = []
+  let chunk = []
+  while (lines.length !== 0) {
+    while (lines.length !== 0 && chunk.reduce((accu, value) => accu + value.length + 1, 0) + lines[0].length + 1 < 2000) {
+      chunk.push(lines.shift())
+    }
+    chunks.push(chunk.join('\n'))
+    chunk = []
+  }
+}
+module.exports.splitMessage = splitMessage

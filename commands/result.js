@@ -1,6 +1,6 @@
 const table = require('text-table')
 const { started } = require('../config.json')
-const { deckToArray } = require('./threecardmagic.js')
+const { deckToArray, splitMessage } = require('./threecardmagic.js')
 
 module.exports = {
   name: 'result',
@@ -34,21 +34,5 @@ module.exports = {
     for (const chunk of splitMessage(response)) {
       message.channel.send('```' + chunk + '```')
     }
-  }
-}
-
-function splitMessage (message) {
-  if (message.length < 2000) {
-    return [message]
-  }
-  const lines = message.split('\n')
-  const chunks = []
-  let chunk = []
-  while (lines.length !== 0) {
-    while (chunk.reduce((accu, value) => accu + value.length + 1, 0) + lines[0].length + 1 < 2000) {
-      chunk.push(lines.shift())
-    }
-    chunks.push(chunk.join('\n'))
-    chunk = []
   }
 }

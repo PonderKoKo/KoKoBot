@@ -1,5 +1,5 @@
 const { started } = require('../config.json')
-const { deckToArray } = require('./threecardmagic.js')
+const { deckToArray, splitMessage } = require('./threecardmagic.js')
 const table = require('text-table')
 
 const fit = {
@@ -34,7 +34,9 @@ module.exports = {
         const [opponentID, submitted] = x
         return [playerNames[opponentID], ...deckToArray(teams[opponentID]), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
       }))
-      message.channel.send('```' + response + '```')
+      for (const chunk of splitMessage(response)) {
+        message.channel.send('```' + chunk + '```')
+      }
       return
     }
     const opponent = args.slice(0, args.length - 1).join(' ')
