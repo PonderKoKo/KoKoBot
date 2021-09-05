@@ -102,5 +102,6 @@ function splitMessage (message) {
     chunks.push(chunk.join('\n'))
     chunk = []
   }
+  return chunks
 }
 module.exports.splitMessage = splitMessage
