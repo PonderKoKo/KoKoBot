@@ -29,7 +29,7 @@ module.exports = {
       message.channel.send('You did not submit a team for this tournament.')
       return
     }
-    if (args.length === 0 || (Object.keys(teams).includes(args.slice(0, args.length - 1).join(' ')) && args[args.length - 1] === 'check')) {
+    if (args.length === 0) {
       const response = table(Object.entries(records[message.author.id]).map(x => {
         const [opponentID, submitted] = x
         return [playerNames[opponentID], ...deckToArray(teams[opponentID]), `Y: ${resultFromSubmitted(submitted)}`, `O: ${resultFromSubmitted(records[opponentID][message.author.id])}`]
