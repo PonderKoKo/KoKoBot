@@ -31,6 +31,24 @@ module.exports = {
     }
     tournamentData.sort((x, y) => y.points - x.points)
     const response = table(tournamentData.map(x => [x.name, ...deckToArray(x.team), x.points, `(${x.missing}M)`]))
-    message.channel.send('```' + response + '```')
+    for (const chunk of splitMessage(response)) {
+      message.channel.send('```' + chunk + '```')
+    }
+  }
+}
+
+function splitMessage (message) {
+  if (message.length < 2000) {
+    return [message]
+  }
+  const lines = message.split('\n')
+  const chunks = []
+  let chunk = []
+  while (lines.length !== 0) {
+    while (chunk.reduce((accu, value) => accu + value.length + 1, 0) + lines[0].length + 1 < 2000) {
+      chunk.push(lines.shift())
+    }
+    chunks.push(chunk.join('\n'))
+    chunk = []
   }
 }
