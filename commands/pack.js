@@ -115,17 +115,19 @@ function loadBatch (query, context, spaces, indices, callback, channel) {
         for (const choice of indices) {
           if (175 * i > choice && choice > 175 * (i - 1)) {
             const card = page.data[choice % 175]
-            if (Object.keys(card).includes('card_faces') ? card.card_faces[0].image_uris : card.image_uris === undefined) {
-              channel.send('There was an issue with getting the image for' + card.name)
+            try {
+              Canvas.loadImage(Object.keys(card).includes('card_faces') ? card.card_faces[0].image_uris.png : card.image_uris.png)
+                .then(image => {
+                  drawCard(context, image, spaces.shift())
+                })
+                .catch(reason => {
+                  console.log(`Error with loading the image of ${card.name}. Reason: ${reason}`)
+                })
+                .finally(() => callback())
+            } catch (error) {
+              channel.send(`There was an issue with loading the image for ${card.name}. ${error} <@448472133585207306>`)
+              callback()
             }
-            Canvas.loadImage(Object.keys(card).includes('card_faces') ? card.card_faces[0].image_uris.png : card.image_uris.png)
-              .then(image => {
-                drawCard(context, image, spaces.shift())
-              })
-              .catch(reason => {
-                console.log(`Error with loading the image of ${card.name}. Reason: ${reason}`)
-              })
-              .finally(() => callback())
           }
         }
       })
