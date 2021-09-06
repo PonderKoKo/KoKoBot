@@ -85,7 +85,7 @@ function generateCubePack (cubeName, channel, numberOfCards = 15) {
 }
 
 function generateBoosterPack (set, channel) {
-  const numberOfCards = Object.entries(booster).reduce((accu, value) => accu + value.count, 0)
+  const numberOfCards = Object.keys(booster).reduce((accu, value) => accu + booster[value].count, 0)
   const [canvas, context] = getCanvasAndContext(numberOfCards)
   const spaces = [...Array(numberOfCards).keys()]
   let drawn = 0
