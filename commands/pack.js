@@ -91,15 +91,16 @@ function generateBoosterPack (set, channel) {
   let drawn = 0
 
   for (const slot of booster) {
+    const space = spaces.splice(0, slot.count)
     const query = slot.multiple ? chance.weighted(slot.options.map(x => x.query), slot.options.map(x => x.weight)) : slot.query
     fetch(`https://api.scryfall.com/cards/search?format=json&include_multilingual=false&q=set=${set} ${query}`)
       .then((response) => response.json())
       .then((result) => {
         const indices = chance.unique(chance.natural, slot.count, { min: 0, max: result.total_cards - 1 })
-        loadBatch(`set=${set} ${query}`, context, spaces.splice(0, slot.count), indices, function () {
+        loadBatch(`set=${set} ${query}`, context, space, indices, function () {
           drawn++
           if (drawn === numberOfCards) {
-            channel.send(`Here is a pack of ${set}!`, new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png'))
+            channel.send(`Here is a pack of ${set.toUpperCase()}!`, new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png'))
           }
         })
       })
