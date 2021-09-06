@@ -116,7 +116,7 @@ function loadBatch (query, context, spaces, indices, callback, channel) {
           if (175 * i > choice && choice > 175 * (i - 1)) {
             const card = page.data[choice % 175]
             try {
-              Canvas.loadImage(Object.keys(card).includes('card_faces') ? card.card_faces[0].image_uris.png : card.image_uris.png)
+              Canvas.loadImage(Object.keys(card).includes('image_uris') ? card.image_uris.png : card.card_faces[0].image_uris.png)
                 .then(image => {
                   drawCard(context, image, spaces.shift())
                 })
