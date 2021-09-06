@@ -34,7 +34,7 @@ const booster = [
   },
   {
     multiple: false,
-    query: 'rarity=common',
+    query: 'rarity=common -type=basic',
     count: 10
   }
 ]
@@ -80,7 +80,7 @@ function generateCubePack (cubeName, channel, numberOfCards = 15) {
         if (drawn === numberOfCards) {
           channel.send(`Here is a pack of ${cubeName} Cube!`, new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png'))
         }
-      })
+      }, channel)
     })
 }
 
@@ -102,12 +102,12 @@ function generateBoosterPack (set, channel) {
           if (drawn === numberOfCards) {
             channel.send(`Here is a pack of ${set.toUpperCase()}!`, new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png'))
           }
-        })
+        }, channel)
       })
   }
 }
 
-function loadBatch (query, context, spaces, indices, callback) {
+function loadBatch (query, context, spaces, indices, callback, channel) {
   for (let i = 1; i < Math.ceil(Math.max(...indices) / 175) + 1; i++) {
     fetch(`https://api.scryfall.com/cards/search?format=json&include_extras=true&include_multilingual=false&order=name&page=${i}&q=${query}&unique=cards`)
       .then((response) => response.json())
@@ -115,6 +115,9 @@ function loadBatch (query, context, spaces, indices, callback) {
         for (const choice of indices) {
           if (175 * i > choice && choice > 175 * (i - 1)) {
             const card = page.data[choice % 175]
+            if (Object.keys(card).includes('card_faces') ? card.card_faces[0].image_uris : card.image_uris === undefined) {
+              channel.send('There was an issue with getting the image for' + card.name)
+            }
             Canvas.loadImage(Object.keys(card).includes('card_faces') ? card.card_faces[0].image_uris.png : card.image_uris.png)
               .then(image => {
                 drawCard(context, image, spaces.shift())
