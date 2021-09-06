@@ -13,11 +13,11 @@ const booster = [
     options: [
       {
         query: 'rarity=rare',
-        chance: 7.4
+        weight: 7.4
       },
       {
         query: 'rarity=mythic',
-        chance: 1
+        weight: 1
       }
     ],
     count: 1
