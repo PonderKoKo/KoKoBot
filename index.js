@@ -155,8 +155,21 @@ client.on('message', (message) => {
   const args = message.content.slice(prefix.length).split(/ +/)
   const COMMAND = args.shift()
   logging(`The command ${COMMAND} was used with the arguments: ${args.join(' ')}`, 'response')
-  if (Object.keys(commands).includes(COMMAND) && (message.author.id === '448472133585207306' || (commands[COMMAND].permission !== 'KoKonuts' && (message.guild === null || commands[COMMAND].permission === 'none' || message.member.hasPermission(commands[COMMAND].permission))))) {
-    commands[COMMAND].execute(message, args)
+  if (Object.keys(commands).includes(COMMAND) &&
+    (message.author.id === '448472133585207306' ||
+      (commands[COMMAND].permission !== 'KoKonuts' &&
+        (message.guild === null ||
+        commands[COMMAND].permission === 'none' ||
+        message.member.hasPermission(commands[COMMAND].permission)
+        )
+      )
+    )
+  ) {
+    try {
+      commands[COMMAND].execute(message, args)
+    } catch (error) {
+      message.channel.send(`There was an error: ${error}. Sorry :( [<@448472133585207306>]`)
+    }
   }
   switch (COMMAND) {
     case 'downloadimages':

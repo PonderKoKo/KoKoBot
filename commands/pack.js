@@ -125,7 +125,11 @@ function loadBatch (query, context, spaces, indices, callback, channel) {
                 })
                 .finally(() => callback())
             } catch (error) {
-              channel.send(`There was an issue with loading the image for ${card.name}. ${error} <@448472133585207306>`)
+              if (error instanceof TypeError) {
+                channel.send(`There was an issue with loading the image for ${card.name}. [<@448472133585207306>]`)
+              } else {
+                throw error
+              }
               callback()
             }
           }
