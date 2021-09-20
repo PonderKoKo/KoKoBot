@@ -3,15 +3,29 @@ const fetch = require('node-fetch')
 
 const zonesizes = {
   library: 1,
-  hand: 4
+  hand: 3
 }
 const brackets = {
   library: ['[', ']'],
   hand: ['', '']
 }
 
-const banlist = ['Thassa\'s Oracle', 'Jace, Wielder of Mysteries', 'Laboratory Maniac']
-const basics = ['Plains', 'Island', 'Swamp', 'Mountain', 'Forest', 'Wastes', 'Snow-Covered Plains', 'Snow-Covered Island', 'Snow-Covered Swamp', 'Snow-Covered Mountain', 'Snow-Covered Forest']
+const banlist = ['Thassa\'s Oracle',
+  'Jace, Wielder of Mysteries',
+  'Laboratory Maniac',
+  'Channel',
+  'Show and Tell',
+  'Shelldock Isle',
+  'Burning Inquiry',
+  'Chain of Smog',
+  'Dark Depths',
+  'Chancellor of the Spires',
+  'Elite Spellbinder',
+  'Crashing Footfalls',
+  'Nether Spirit',
+  'Vicious Rumors',
+  'Chancellor of the Annex',
+  'Tabernacle at Pendrell Vale']
 
 module.exports = {
   name: 'threecardmagic',
@@ -50,7 +64,7 @@ module.exports = {
           if (result.object !== 'list') {
             notfound.push(card)
           } else {
-            if (result.data[0].type_line.match(/\bLand\b/)) {
+            if (result.data[0].type_line.match(/\bBasic\b/)) {
               hasLand = true
             }
             cardnames[i] = result.data[0].name // Fix capitalization
@@ -62,7 +76,7 @@ module.exports = {
             } else if (cardnames.some(x => banlist.includes(x))) {
               message.channel.send(`The cards ${cardnames.filter(x => banlist.includes(x).join(' | '))} you submitted are banned.`)
             } else if (!hasLand) {
-              message.channel.send('The deck you submitted does not include a land.')
+              message.channel.send('The deck you submitted does not include a basic land.')
             } else {
               const deck = {}
               for (const [zone, size] of Object.entries(zonesizes)) {
