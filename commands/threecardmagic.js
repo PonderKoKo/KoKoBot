@@ -2,30 +2,14 @@ const { started } = require('../config.json')
 const fetch = require('node-fetch')
 
 const zonesizes = {
-  library: 1,
-  hand: 3
+  hand: 5
 }
 const brackets = {
   library: ['[', ']'],
   hand: ['', '']
 }
 
-const banlist = ['Thassa\'s Oracle',
-  'Jace, Wielder of Mysteries',
-  'Laboratory Maniac',
-  'Channel',
-  'Show and Tell',
-  'Shelldock Isle',
-  'Burning Inquiry',
-  'Chain of Smog',
-  'Dark Depths',
-  'Chancellor of the Spires',
-  'Elite Spellbinder',
-  'Crashing Footfalls',
-  'Nether Spirit',
-  'Vicious Rumors',
-  'Chancellor of the Annex',
-  'Tabernacle at Pendrell Vale']
+const banlist = ['Wistful Thinking', 'Burning Inquiry']
 
 module.exports = {
   name: 'threecardmagic',
@@ -53,20 +37,16 @@ module.exports = {
       return
     }
     const notfound = []
-    let hasLand = false
     let done = 0
     for (let i = 0; i < cardnames.length; i++) {
       const card = cardnames[i]
-      const url = `https://api.scryfall.com/cards/search?format=json&include_multilingual=false&q=!"${card}" legal=vintage`
+      const url = `https://api.scryfall.com/cards/search?format=json&include_multilingual=false&q=!"${card}" legal=pauper`
       fetch(url)
         .then((response) => response.json())
         .then((result) => {
           if (result.object !== 'list') {
             notfound.push(card)
           } else {
-            if (result.data[0].type_line.match(/\bBasic\b/)) {
-              hasLand = true
-            }
             cardnames[i] = result.data[0].name // Fix capitalization
           }
           done += 1
@@ -75,8 +55,6 @@ module.exports = {
               message.channel.send(`The team you submitted could not be saved. The following cards could not be found:\n${notfound.join('\n')}\nMake sure to check your spelling and note that only Vintage-legal cards are accepted.`)
             } else if (cardnames.some(x => banlist.includes(x))) {
               message.channel.send(`The cards ${cardnames.filter(x => banlist.includes(x).join(' | '))} you submitted are banned.`)
-            } else if (!hasLand) {
-              message.channel.send('The deck you submitted does not include a basic land.')
             } else {
               const deck = {}
               for (const [zone, size] of Object.entries(zonesizes)) {
