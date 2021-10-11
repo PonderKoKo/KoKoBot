@@ -52,9 +52,9 @@ module.exports = {
           done += 1
           if (done === cardnames.length) {
             if (notfound.length !== 0) {
-              message.channel.send(`The team you submitted could not be saved. The following cards could not be found:\n${notfound.join('\n')}\nMake sure to check your spelling and note that only Vintage-legal cards are accepted.`)
+              message.channel.send(`The team you submitted could not be saved. The following cards could not be found:\n${notfound.join('\n')}\nMake sure to check your spelling and note that only Pauper-legal cards are accepted.`)
             } else if (cardnames.some(x => banlist.includes(x))) {
-              message.channel.send(`The cards ${cardnames.filter(x => banlist.includes(x).join(' | '))} you submitted are banned.`)
+              message.channel.send(`The cards ${cardnames.filter(x => banlist.includes(x)).join(' | ')} you submitted are banned.`)
             } else {
               const deck = {}
               for (const [zone, size] of Object.entries(zonesizes)) {
