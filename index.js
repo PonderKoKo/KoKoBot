@@ -1,5 +1,3 @@
-/* eslint quotes: ["error", "single", { "allowTemplateLiterals": true }] */
-
 const Discord = require('discord.js')
 const fs = require('mz/fs')
 const fetch = require('node-fetch')
