@@ -12,11 +12,11 @@ const {
   imagesPath,
   prefix,
   started,
-  token,
   timeBetweenRefresh,
   scryfallRequestDelayTime,
   isTest
 } = require('./config.json')
+const token = require('./token.json')
 
 const client = new Discord.Client()
 module.exports.client = client
