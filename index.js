@@ -14,7 +14,7 @@ const {
   scryfallRequestDelayTime,
   isTest
 } = require('./config.json')
-const token = require('./token.json')
+const { token }= require('./token.json')
 
 const client = new Discord.Client()
 module.exports.client = client
@@ -122,7 +122,6 @@ client.once('ready', () => {
       }
     })
 })
-
 client.login(token)
 
 client.on('guildMemberAdd', (member) => {
