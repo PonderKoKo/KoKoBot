@@ -375,6 +375,7 @@ function scryfallRequest (setcode) {
               for (const channelID of spoilerData.sets[SETKEY].channelIDs) {
                 client.channels.fetch(channelID)
                   .then(channel => channel.send(message))
+			  .catch(error => logging('spoiler channel could not be found'))
               }
             }
             spoilerData.sets[SETKEY].cardIDs[card.id] = message.split('\n')
