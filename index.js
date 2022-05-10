@@ -1,8 +1,11 @@
 const Discord = require('discord.js')
-const fs = require('mz/fs')
-const fetch = require('node-fetch')
-const request = require('request')
-const Canvas = require('canvas')
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const fs = require('mz/fs');
+const fetch = require('node-fetch');
+const request = require('request');
+const Canvas = require('canvas');
 const {
   dataFileName,
   threeCardFileName,
@@ -14,15 +17,73 @@ const {
   scryfallRequestDelayTime,
   isTest
 } = require('./config.json')
-const { token }= require('./token.json')
+const { token } = require('./token.json');
+
+const rest = new REST({ version: '9' }).setToken(token);
 
 const client = new Discord.Client()
 module.exports.client = client
 
-let spoilerData = {}
-const commands = {}
+let spoilerData = {};
+const commands = {};
 
-let logchannel
+let logchannel;
+
+(async () => {
+	try {
+		console.log('Started refreshing application (/) commands.');
+
+		await rest.put(
+			Routes.applicationCommands(client.id),
+			{ body: commands },
+		);
+
+		console.log('Successfully reloaded application (/) commands.');
+	} catch (error) {
+		console.error(error);
+	}
+})();
+
+// Should be automatically generated from command files
+const slashCommandData = new SlashCommandBuilder()
+	.setName('pack')
+	.setDescription('Generates a Pack image for the selected cube.')
+	.addStringOption(option =>
+		option.setName('Cube Name')
+			.setRequired(true)
+      , 'Grixis', 'Legacy', 'Chuck', 'Twisted', 'Protour', 'Uncommon', 'April', 'Modern', 'Amaz', 'Tinkerer', 'Livethedream', 'Chromatic', 'Vintage'
+			.addChoice('Arena')
+      .addChoice('Grixis')
+      .addChoice('Legacy')
+      .addChoice('Chuck')
+      .addChoice('Twisted')
+      .addChoice('Protour')
+      .addChoice('Uncommon')
+      .addChoice('April')
+      .addChoice('Modern')
+      .addChoice('Amaz')
+      .addChoice('Tinkerer')
+      .addChoice('Livethedream')
+      .addChoice('Chromatic')
+      .addChoice('Vintage'))
+  .addIntegerOption(option =>
+    option.setName('Number of Cards')
+    .setRequired(false)
+    .addChoice(1)
+    .addChoice(2)
+    .addChoice(3)
+    .addChoice(4)
+    .addChoice(5)
+    .addChoice(6)
+    .addChoice(7)
+    .addChoice(8)
+    .addChoice(9)
+    .addChoice(10)
+    .addChoice(11)
+    .addChoice(12)
+    .addChoice(13)
+    .addChoice(14)
+    .addChoice(15));
 
 function logging (logMessage, importance = 'default') {
   const TODAY = new Date()
@@ -144,6 +205,14 @@ client.on('guildMemberRemove', (member) => {
     .then((channel) => { channel.send(`${member.displayName} left :(. We are now ${String(200 - (member.guild.memberCount % 200))} members away from ${String(200 * (Math.floor(member.guild.memberCount / 200) + 1))}.`) })
     .catch(() => { logging(`Couldn't retrieve welcome channel, no message was sent`, 'error') })
 })
+
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	if (interaction.commandName === 'pack') {
+		await commands['pack'].slash(interaction, interaction.options.getString('Cube Name'), interaction.options.getInteger('Number of Cards'));
+	}
+});
 
 client.on('message', (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot || (isTest === true && message.author.id !== '448472133585207306')) return

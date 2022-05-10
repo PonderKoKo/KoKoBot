@@ -64,10 +64,17 @@ module.exports = {
   },
   welcome (channel) {
     generateCubePack(scryfallCubes[Object.keys(scryfallCubes).length * Math.random() | 0], channel)
+  },
+  async slash (interaction, cubeName, numberOfCards) {
+    await interaction.reply(`Here you go — a pack of ${cubeName} Cube.`, generateCubePackImage(cubeName, numberOfCards));
   }
 }
 
 function generateCubePack (cubeName, channel, numberOfCards = 15) {
+  channel.send(`Here is a pack of ${cubeName} Cube. Let us know what your first pick would be!`, generateCubePackImage(cubeName, numberOfCards));
+}
+
+function generateCubePackImage (cubeName, numberOfCards) {
   const [canvas, context] = getCanvasAndContext(numberOfCards)
   let drawn = 0
 
@@ -78,7 +85,7 @@ function generateCubePack (cubeName, channel, numberOfCards = 15) {
       loadBatch(`cube=${cubeName}`, context, [...Array(numberOfCards).keys()], indices, function () {
         drawn++
         if (drawn === numberOfCards) {
-          channel.send(`Here is a pack of ${cubeName} Cube. Let us know what your first pick would be!`, new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png'))
+          return new Discord.MessageAttachment(canvas.toBuffer(), 'CubePack.png');
         }
       }, channel)
     })
